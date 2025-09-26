@@ -10,11 +10,21 @@ RDEPENDS:${PN} = "util-linux util-linux-unshare iptables \
                   ${@bb.utils.contains('DISTRO_FEATURES', 'aufs', 'aufs-util', '', d)} \
                   ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'cgroup-lite', d)} \
                   bridge-utils \
-                  ca-certificates \
                  "
 RDEPENDS:${PN} += "virtual-containerd ${VIRTUAL-RUNTIME_container_runtime}"
 
-RRECOMMENDS:${PN} = "kernel-module-dm-thin-pool kernel-module-nf-nat kernel-module-nf-conntrack-netlink kernel-module-xt-addrtype kernel-module-xt-masquerade"
+RRECOMMENDS:${PN} = "kernel-module-dm-thin-pool \
+                     kernel-module-nf-conntrack \
+                     kernel-module-nf-conntrack-netlink \
+                     kernel-module-nf-nat \
+                     kernel-module-nfnetlink \
+                     kernel-module-overlay \
+                     kernel-module-veth \
+                     kernel-module-x-tables \
+                     kernel-module-xt-addrtype \
+                     kernel-module-xt-conntrack \
+                     kernel-module-xt-masquerade \
+                    "
 
 PROVIDES += "virtual/docker"
 
@@ -26,16 +36,13 @@ RPROVIDES:${PN}-dev += "docker-dev"
 RPROVIDES:${PN}-contrip += "docker-dev"
 
 inherit pkgconfig
-PACKAGECONFIG ??= "docker-init seccomp"
+PACKAGECONFIG ??= "docker-init seccomp ca-certs"
 PACKAGECONFIG[seccomp] = "seccomp,,libseccomp"
 PACKAGECONFIG[docker-init] = ",,,docker-init"
 PACKAGECONFIG[transient-config] = "transient-config"
-
+PACKAGECONFIG[ca-certs] = ",,,ca-certificates"
 
 GO_IMPORT = "import"
-S = "${WORKDIR}/git"
-
-
 
 inherit systemd update-rc.d
 inherit go

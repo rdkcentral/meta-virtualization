@@ -3,22 +3,21 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 PRIORITY = "optional"
 
-SRCREV_crun = "4d6eae2eb8047a7f51e536ffe461666b65b3d5e9"
-SRCREV_libocispec = "5ffd4dd9fa684e0ffb2f0b5ea4a6cb638b021397"
-SRCREV_ispec = "c66e8113cbad252a418d85f061bd1a20d0904d08"
-SRCREV_rspec = "9505701eb390445ef7edf2be3bd3d7bc1f14eae5"
+SRCREV_crun = "ca8e5c74c13dbd5b1125d0357a9081d283a50971"
+SRCREV_libocispec = "68397329bc51a66c56938fc4111fac751d6fd3b0"
+SRCREV_ispec = "64294bd7a2bf2537e1a6a34d687caae70300b0c4"
+SRCREV_rspec = "82cca47c22f5e87880421381fe1f8e0ef541ab64"
 SRCREV_yajl = "f344d21280c3e4094919fd318bc5ce75da91fc06"
 
 SRCREV_FORMAT = "crun_rspec"
 SRC_URI = "git://github.com/containers/crun.git;branch=main;name=crun;protocol=https \
-           git://github.com/containers/libocispec.git;branch=main;name=libocispec;destsuffix=git/libocispec;protocol=https \
-           git://github.com/opencontainers/runtime-spec.git;branch=main;name=rspec;destsuffix=git/libocispec/runtime-spec;protocol=https \
-           git://github.com/opencontainers/image-spec.git;branch=main;name=ispec;destsuffix=git/libocispec/image-spec;protocol=https \
-           git://github.com/containers/yajl.git;branch=main;name=yajl;destsuffix=git/libocispec/yajl;protocol=https \
+           git://github.com/containers/libocispec.git;branch=main;name=libocispec;destsuffix=${BB_GIT_DEFAULT_DESTSUFFIX}/libocispec;protocol=https \
+           git://github.com/opencontainers/runtime-spec.git;branch=main;name=rspec;destsuffix=${BB_GIT_DEFAULT_DESTSUFFIX}/libocispec/runtime-spec;protocol=https \
+           git://github.com/opencontainers/image-spec.git;branch=main;name=ispec;destsuffix=${BB_GIT_DEFAULT_DESTSUFFIX}/libocispec/image-spec;protocol=https \
+           git://github.com/containers/yajl.git;branch=main;name=yajl;destsuffix=${BB_GIT_DEFAULT_DESTSUFFIX}/libocispec/yajl;protocol=https \
           "
 
-PV = "v1.20.0+git${SRCREV_crun}"
-S = "${WORKDIR}/git"
+PV = "v1.23.1+git${SRCREV_crun}"
 
 inherit autotools-brokensep pkgconfig
 

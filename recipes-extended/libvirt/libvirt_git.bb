@@ -24,9 +24,9 @@ RDEPENDS:libvirt-libvirtd:append:aarch64 = " dmidecode"
 #connman blocks the 53 port and libvirtd can't start its DNS service
 RCONFLICTS:${PN}_libvirtd = "connman"
 
-SRCREV_libvirt = "9cd06737487c8ee311f71b7288c46a5cc70a700a"
+SRCREV_libvirt = "8ba3d94995cd044ca7836cb937b14cd47eb0b868"
 
-LIBVIRT_VERSION = "11.1.0"
+LIBVIRT_VERSION = "11.4.0"
 PV = "v${LIBVIRT_VERSION}+git"
 
 SRC_URI = "gitsm://github.com/libvirt/libvirt.git;name=libvirt;protocol=https;branch=master \
@@ -43,13 +43,12 @@ SRC_URI = "gitsm://github.com/libvirt/libvirt.git;name=libvirt;protocol=https;br
            file://0001-qemu_nbdkit.c-use-llu-to-print-time_t.patch \
           "
 
-S = "${WORKDIR}/git"
-
 inherit meson gettext update-rc.d pkgconfig systemd useradd perlnative
 USERADD_PACKAGES = "${PN}"
-GROUPADD_PARAM:${PN} = "-r qemu; -r kvm"
+GROUPADD_PARAM:${PN} = "-r qemu; -r kvm; -r libvirt; -r virtlogin"
 USERADD_PARAM:${PN} = "-r -g qemu -G kvm qemu"
 
+CFLAGS += "${@oe.utils.vartrue('DEBUG_BUILD', '-Wno-error=inline', '', d)}"
 
 EXTRA_OEMESON += "--cross-file ${WORKDIR}/meson-${PN}.cross"
 do_write_config:append() {

@@ -7,15 +7,12 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c6dd79b6ec2130a3364f6fa9d6380408 \
     file://LICENSE-Apache2.0;md5=3b83ef96387f14655fc854ddc3c6bd57 \
 "
 
-SRCREV = "8a1d73498c505049cd281a1661c2750b93fb4a6f"
-SRC_URI = "git://github.com/canonical/cloud-init;branch=25.1.x;protocol=https \
-    file://cloud-init-source-local-lsb-functions.patch \
-    file://0001-setup.py-check-for-install-anywhere-in-args.patch \
+SRCREV = "b04c475f3147fd849bac6b3d41e1302b222c8406"
+SRC_URI = "git://github.com/canonical/cloud-init;branch=main;protocol=https \
+           file://cloud-init-source-local-lsb-functions.patch \
 "
 
-PV = "v25.1.1+git"
-
-S = "${WORKDIR}/git"
+PV = "v25.2.0+git"
 
 DISTUTILS_INSTALL_ARGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', '--init-system=sysvinit_deb', '', d)}"
 DISTUTILS_INSTALL_ARGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--init-system=systemd', '', d)}"
@@ -31,9 +28,10 @@ do_install:append() {
 }
 
 inherit pkgconfig
-inherit setuptools3_legacy
 inherit update-rc.d
 inherit systemd
+inherit python_setuptools_build_meta
+inherit meson
 
 # setup.py calls "pkg-config systemd --variable=systemdsystemunitdir" and needs to find our dev manager
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"

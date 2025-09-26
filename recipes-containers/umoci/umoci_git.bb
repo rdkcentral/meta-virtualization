@@ -6,12 +6,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=3b83ef96387f14655fc854ddc3c6bd57"
 RDEPENDS:${PN} = "skopeo"
 RDEPENDS:${PN}:class-native = ""
 
-SRCREV_umoci = "8f807a317985f23f90f0d1dd75f5f6de34e0c263"
+SRCREV_umoci = "645eba432fb989761433beb295951d516bfcc316"
 SRC_URI = "git://github.com/opencontainers/umoci.git;branch=main;name=umoci;destsuffix=github.com/opencontainers/umoci;protocol=https \
           "
 
-PV = "v0.4.7+git"
-S = "${WORKDIR}/github.com/opencontainers/umoci"
+PV = "v0.5.0+git"
+S = "${UNPACKDIR}/github.com/opencontainers/umoci"
 GO_IMPORT = "github.com/opencontainers/umoci"
 
 inherit goarch
@@ -39,7 +39,7 @@ do_compile:class-native () {
     export CC="${BUILD_CC}"
     export LD="${BUILD_LD}"
 
-    export GOPATH="${WORKDIR}/git/"
+    export GOPATH="${UNPACKDIR}/git/"
     export GO111MODULE=off
 
     export STATIC_BUILD_FLAGS="-trimpath"

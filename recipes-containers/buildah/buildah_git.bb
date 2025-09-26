@@ -6,9 +6,7 @@ DESCRIPTION = "A tool that facilitates building OCI container images."
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://src/github.com/containers/buildah/LICENSE;md5=e3fc50a88d0a364313df4b21ef20c29e"
 
-S = "${WORKDIR}/git"
-
-BUILDAH_VERSION = "1.39.1"
+BUILDAH_VERSION = "1.41.3"
 
 PV = "${BUILDAH_VERSION}"
 
@@ -27,10 +25,10 @@ GO_INSTALL = "${GO_IMPORT}"
 GO_WORKDIR = "${GO_INSTALL}"
 GOBUILDFLAGS += "-mod vendor"
 
-SRCREV = "1c4d858794c90fbb882c976efea09035c83cd73c"
+SRCREV = "a56e4970194e2f3b2c351620f1ae4a7fc50756bd"
 
 SRC_URI = " \
-    git://github.com/containers/buildah;branch=release-1.39;name=buildah;protocol=https;destsuffix=${GO_SRCURI_DESTSUFFIX} \
+    git://github.com/containers/buildah;branch=release-1.41;name=buildah;protocol=https;destsuffix=${GO_SRCURI_DESTSUFFIX} \
     "
 
 DEPENDS = "libdevmapper btrfs-tools gpgme"

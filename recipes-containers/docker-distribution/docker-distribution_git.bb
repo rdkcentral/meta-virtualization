@@ -3,16 +3,17 @@ SUMMARY = "The Docker toolset to pack, ship, store, and deliver content"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d2794c0df5b907fdace235a619d80314"
 
-SRCREV_distribution = "f22dd6186008ff9d35f92acc5bc5fd16ba7ef95a"
+SRCREV_distribution = "da404778edd3faa665e48ca3bb791b6144f3355e"
 SRC_URI = "git://github.com/docker/distribution.git;branch=main;name=distribution;destsuffix=git/src/github.com/distribution/distribution/v3;protocol=https \
            file://docker-registry.service \
            file://0001-build-use-to-use-cross-go-compiler.patch \
+           file://0001-s3-aws-fix-build-for-386.patch \
           "
 
 PACKAGES =+ "docker-registry"
 
-PV = "v3.0.0-beta.1"
-S = "${WORKDIR}/git/src/github.com/distribution/distribution/v3"
+PV = "v3.0.0"
+S = "${UNPACKDIR}/git/src/github.com/distribution/distribution/v3"
 
 GO_IMPORT = "import"
 
@@ -24,7 +25,7 @@ EXTRA_OEMAKE = "BUILDTAGS=''"
 
 do_compile() {
 	export GOARCH="${TARGET_GOARCH}"
-	export GOPATH="${WORKDIR}/git/"
+	export GOPATH="${UNPACKDIR}/git/"
 	export GOROOT="${STAGING_LIBDIR}/go"
 	# Pass the needed cflags/ldflags so that cgo
 	# can find the needed headers files and libraries
@@ -39,6 +40,8 @@ do_compile() {
 
 	cd ${S}
 
+	# See https://github.com/distribution/distribution/issues/4627
+	sed -i -e 's#+unknown##' version/version.go
 	oe_runmake binaries
 }
 

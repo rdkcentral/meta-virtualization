@@ -19,7 +19,13 @@ SRC_URI = " \
     file://ipxe-intel-Avoid-spurious-compiler-warning-on-GCC-10.patch \
     file://ipxe-golan-Add-explicit-type-casts-for-nodnic_queue_pair_.patch \
     file://build-be-explicit-about-fcommon-compiler-directive.patch \
+    file://0001-build-Fix-typo-in-xenver.h-header-guard.patch;patchdir=.. \
+    file://0002-build-Fix-old-style-function-definition.patch;patchdir=.. \
+    file://0003-build-Prevent-the-use-of-reserved-words-in-C23.patch;patchdir=.. \
+    file://0004-build-Remove-unsafe-disable-function-wrapper-from-le.patch;patchdir=.. \
     "
+
+S = "${UNPACKDIR}/${BB_GIT_DEFAULT_DESTSUFFIX}/src"
 
 FILES:${PN} = "/usr/share/firmware/*.rom"
 
@@ -30,8 +36,6 @@ EXTRA_OEMAKE = ' \
     EXTRA_HOST_LDFLAGS="${BUILD_LDFLAGS}" \
     NO_WERROR="1" \
 '
-
-S = "${WORKDIR}/git/src"
 
 do_compile() {
     # Makefile.housekeeping:111: GNU gold is unsuitable for building iPXE
