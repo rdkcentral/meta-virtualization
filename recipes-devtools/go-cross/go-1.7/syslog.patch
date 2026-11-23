@@ -1,0 +1,82 @@
+Date: Thu 27 Feb 17:06:53 GMT 2020
+From: xione
+Subject: Use correct version of runc for sky-dobby
+Source: COMCAST
+License: BSD-3
+Upstream-Status: Pending
+Signed-off-by: Kamal Mortoza <kamal.mortoza@sky.uk>
+
+From 29c19b44a421353e80d91a15feb3fb8c7630a185 Mon Sep 17 00:00:00 2001
+From: Antti Kyllonen <antti.kyllonen@redembedded.com>
+Date: Mon, 21 Oct 2019 17:05:20 +0100
+Subject: [PATCH] syslog
+
+---
+ src/log/syslog/syslog.go      | 16 ++++++++++++++--
+ src/log/syslog/syslog_unix.go |  2 +-
+ 2 files changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/src/log/syslog/syslog.go b/src/log/syslog/syslog.go
+index 9e888dd..077bbca 100644
+--- a/src/log/syslog/syslog.go
++++ b/src/log/syslog/syslog.go
+@@ -26,6 +26,9 @@ type Priority int
+ const severityMask = 0x07
+ const facilityMask = 0xf8
+ 
++var writeTimeout = 1 * time.Second
++var connectTimeout = 1 * time.Second
++
+ const (
+ 	// Severity.
+ 
+@@ -93,6 +96,7 @@ type Writer struct {
+ type serverConn interface {
+ 	writeString(p Priority, hostname, tag, s, nl string) error
+ 	close() error
++    setWriteDeadline(t time.Time) error
+ }
+ 
+ type netConn struct {
+@@ -267,8 +271,12 @@ func (w *Writer) write(p Priority, msg string) (int, error) {
+ 		nl = "\n"
+ 	}
+ 
+-	err := w.conn.writeString(p, w.hostname, w.tag, msg, nl)
+-	if err != nil {
++    err := w.conn.setWriteDeadline(time.Now().Add(writeTimeout))
++    if err != nil {
++            return 0, err
++    }
++    err = w.conn.writeString(p, w.hostname, w.tag, msg, nl)
++    if err != nil {
+ 		return 0, err
+ 	}
+ 	// Note: return the length of the input, not the number of
+@@ -299,6 +307,10 @@ func (n *netConn) close() error {
+ 	return n.conn.Close()
+ }
+ 
++func (n *netConn) setWriteDeadline(t time.Time) error {
++       return n.conn.SetWriteDeadline(t)
++}
++
+ // NewLogger creates a log.Logger whose output is written to
+ // the system log service with the specified priority. The logFlag
+ // argument is the flag set passed through to log.New to create
+diff --git a/src/log/syslog/syslog_unix.go b/src/log/syslog/syslog_unix.go
+index 1cdabec..e87fdd7 100644
+--- a/src/log/syslog/syslog_unix.go
++++ b/src/log/syslog/syslog_unix.go
+@@ -19,7 +19,7 @@ func unixSyslog() (conn serverConn, err error) {
+ 	logPaths := []string{"/dev/log", "/var/run/syslog", "/var/run/log"}
+ 	for _, network := range logTypes {
+ 		for _, path := range logPaths {
+-			conn, err := net.Dial(network, path)
++                       conn, err := net.DialTimeout(network, path, connectTimeout)
+ 			if err != nil {
+ 				continue
+ 			} else {
+-- 
+2.7.4
+

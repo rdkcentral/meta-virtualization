@@ -1,10 +1,10 @@
 DESCRIPTION = "lxc aims to use these new functionnalities to provide an userspace container object"
 SECTION = "console/utils"
-LICENSE = "GPLv2"
+LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 PRIORITY = "optional"
 DEPENDS = "libxml2 libcap"
-RDEPENDS_${PN} = " \
+RDEPENDS_${BPN} = " \
 		rsync \
 		gzip \
 		libcap-bin \
@@ -22,12 +22,12 @@ RDEPENDS_${PN} = " \
 "
 RDEPENDS_${PN}-ptest += "file make"
 
-SRC_URI = "http://linuxcontainers.org/downloads/${BPN}-${PV}.tar.gz \
+SRC_URI = "https://linuxcontainers.org/downloads/${BPN}/${BPN}-${PV}.tar.gz \
 	file://lxc-1.0.0-disable-udhcp-from-busybox-template.patch \
 	file://runtest.patch \
 	file://run-ptest \
 	file://automake-ensure-VPATH-builds-correctly.patch \
-	file://lxc-fix-B-S.patch \
+	file://lxc200-fix-B-S.patch \
 	file://lxc-doc-upgrade-to-use-docbook-3.1-DTD.patch \
 	file://logs-optionally-use-base-filenames-to-report-src-fil.patch \
 	"
@@ -59,7 +59,7 @@ PACKAGECONFIG ??= "templates \
 PACKAGECONFIG[doc] = "--enable-doc --enable-api-docs,--disable-doc --disable-api-docs,,"
 PACKAGECONFIG[rpath] = "--enable-rpath,--disable-rpath,,"
 PACKAGECONFIG[apparmour] = "--enable-apparmor,--disable-apparmor,apparmor,apparmor"
-PACKAGECONFIG[templates] = ",,, ${PN}-templates"
+PACKAGECONFIG[templates] = ",,, ${BPN}-templates"
 PACKAGECONFIG[selinux] = "--enable-selinux,--disable-selinux,libselinux,libselinux"
 PACKAGECONFIG[seccomp] ="--enable-seccomp,--disable-seccomp,libseccomp,libseccomp"
 PACKAGECONFIG[python] = "--enable-python,--disable-python,python3,python3-core"
@@ -85,9 +85,9 @@ FILES_${PN}-doc = "${mandir} ${infodir}"
 FILES_${PN} += "${docdir}"
 FILES_${PN} += "${libdir}/python3*"
 FILES_${PN}-dbg += "${libexecdir}/lxc/.debug"
-PACKAGES =+ "${PN}-templates ${PN}-setup ${PN}-networking"
-FILES_${PN}-templates += "${datadir}/lxc/templates"
-RDEPENDS_${PN}-templates += "bash"
+PACKAGES =+ "${BPN}-templates ${PN}-setup ${PN}-networking"
+FILES_${BPN}-templates += "${datadir}/lxc/templates"
+RDEPENDS_${BPN}-templates += "bash"
 
 ALLOW_EMPTY_${PN}-networking = "1"
 
@@ -172,3 +172,5 @@ fi
 EOF
 chmod 755 /etc/network/if-pre-up.d/lxcbr0
 }
+
+BBCLASSEXTEND = "native"

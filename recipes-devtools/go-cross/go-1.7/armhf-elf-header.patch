@@ -1,0 +1,39 @@
+Date: Thu 27 Feb 17:06:53 GMT 2020
+From: xione
+Subject: Use correct version of runc for sky-dobby
+Source: COMCAST
+License: BSD-3
+Upstream-Status: Pending
+Signed-off-by: Kamal Mortoza <kamal.mortoza@sky.uk>
+
+From 056ce42976bb632a99b87721a00d77f41ae5d632 Mon Sep 17 00:00:00 2001
+From: Antti Kyllonen <antti.kyllonen@redembedded.com>
+Date: Mon, 21 Oct 2019 16:27:44 +0100
+Subject: [PATCH] armhf-elf-header
+
+---
+ src/cmd/link/internal/ld/elf.go | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/src/cmd/link/internal/ld/elf.go b/src/cmd/link/internal/ld/elf.go
+index 39d3609..ae086a0 100644
+--- a/src/cmd/link/internal/ld/elf.go
++++ b/src/cmd/link/internal/ld/elf.go
+@@ -947,7 +947,13 @@ func Elfinit() {
+ 	// 32-bit architectures
+ 	case sys.ARM:
+ 		// we use EABI on both linux/arm and freebsd/arm.
+-		if HEADTYPE == obj.Hlinux || HEADTYPE == obj.Hfreebsd {
++		if HEADTYPE == obj.Hlinux {
++                if Ctxt.Goarm == 7 {
++                    ehdr.flags = 0x5000402 // has entry point, Version5 EABI, hard float
++                } else {
++                    ehdr.flags = 0x5000202 // has entry point, Version5 EABI, soft float
++                }
++            } else if HEADTYPE == obj.Hfreebsd {
+ 			// We set a value here that makes no indication of which
+ 			// float ABI the object uses, because this is information
+ 			// used by the dynamic linker to compare executables and
+-- 
+2.7.4
+
